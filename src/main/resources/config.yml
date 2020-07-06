@@ -1,0 +1,19 @@
+generators:
+  'default':
+    priority: 1
+    blocks:
+      - 'NETHERRACK;100'
+  'donor':
+    priority: 2
+    blocks:
+      - 'NETHERRACK;50'
+      - 'DIRT;50'
+generation_check_ticks: 20
+source_permissions:
+  - 'infinitelavasource.use'
+source_wait_ticks: 40
+repeat_source_checks: true
+enabled_worlds:
+  - 'world'
+  - 'world_nether'
+  - 'world_the_end'

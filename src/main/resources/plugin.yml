@@ -1,0 +1,8 @@
+name: LavaUtilities
+version: @version@
+api-version: "1.16"
+main: me.piggypiglet.lavautilities.boot.LavaUtilitiesBootstrap
+author: PiggyPiglet
+website: https://piggypiglet.me
+description: Infinite Lava Sources and Lava (Cobblestone) Generators
+prefix: LU
