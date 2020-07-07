@@ -6,3 +6,6 @@ author: PiggyPiglet
 website: https://piggypiglet.me
 description: Infinite Lava Sources and Lava (Cobblestone) Generators
 prefix: LU
+commands:
+  lu:
+    description: Lava utilities command

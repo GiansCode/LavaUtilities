@@ -16,11 +16,15 @@ import java.util.function.Consumer;
 // ------------------------------
 @Singleton
 public final class Task {
-    private final BukkitScheduler scheduler = Bukkit.getScheduler();
+    private final BukkitScheduler SCHEDULER = Bukkit.getScheduler();
 
     @Inject private JavaPlugin main;
 
     public void sync(@NotNull final Consumer<BukkitTask> function, final long ticks) {
-        scheduler.runTaskLater(main, function, ticks);
+        SCHEDULER.runTaskLater(main, function, ticks);
+    }
+
+    public void async(@NotNull final Consumer<BukkitTask> function) {
+        SCHEDULER.runTaskAsynchronously(main, function);
     }
 }

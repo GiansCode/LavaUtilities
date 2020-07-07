@@ -1,8 +1,8 @@
 package me.piggypiglet.lavautilities.file.objects.parts;
 
-import com.github.lewysdavies.probabilitymap.ProbabilityMap;
 import com.google.gson.annotations.JsonAdapter;
-import me.piggypiglet.lavautilities.file.objects.parts.json.BlocksAdapter;
+import me.piggypiglet.lavautilities.file.objects.parts.json.BlocksDeserializer;
+import me.piggypiglet.lavautilities.utils.collection.WeightedList;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public final class Generator {
     private String name;
     private int priority;
-    @JsonAdapter(BlocksAdapter.class) private ProbabilityMap<Material> blocks;
+    @JsonAdapter(BlocksDeserializer.class) private WeightedList<Material> blocks;
 
     @NotNull
     public String getName() {
@@ -29,7 +29,7 @@ public final class Generator {
     }
 
     @NotNull
-    public ProbabilityMap<Material> getBlocks() {
+    public WeightedList<Material> getBlocks() {
         return blocks;
     }
 

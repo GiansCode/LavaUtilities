@@ -8,10 +8,11 @@ generators:
     blocks:
       - 'NETHERRACK;50'
       - 'DIRT;50'
-generation_check_ticks: 20
+generation_check_time: 2 secs
+generation_interval_time: 2 secs - 3 secs
 source_permissions:
   - 'infinitelavasource.use'
-source_wait_ticks: 40
+source_wait_time: 2 secs
 repeat_source_checks: true
 enabled_worlds:
   - 'world'

@@ -3,6 +3,8 @@ package me.piggypiglet.lavautilities.boot;
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 import me.piggypiglet.lavautilities.boot.framework.Registerable;
+import me.piggypiglet.lavautilities.commands.registerables.CommandHandlerRegisterable;
+import me.piggypiglet.lavautilities.commands.registerables.CommandsRegisterable;
 import me.piggypiglet.lavautilities.events.EventRegisterable;
 import me.piggypiglet.lavautilities.file.registerables.FileObjectsRegisterable;
 import me.piggypiglet.lavautilities.file.registerables.FilesRegisterable;
@@ -22,6 +24,8 @@ public final class LavaUtilitiesBootstrap extends JavaPlugin {
     private static final List<Class<? extends Registerable>> REGISTERABLES = Lists.newArrayList(
             FileObjectsRegisterable.class,
             FilesRegisterable.class,
+            CommandHandlerRegisterable.class,
+            CommandsRegisterable.class,
             EventRegisterable.class
     );
 

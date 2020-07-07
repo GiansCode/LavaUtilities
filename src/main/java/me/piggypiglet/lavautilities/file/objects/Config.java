@@ -3,7 +3,9 @@ package me.piggypiglet.lavautilities.file.objects;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.inject.Singleton;
 import me.piggypiglet.lavautilities.file.annotations.File;
-import me.piggypiglet.lavautilities.file.objects.json.GeneratorSetAdapter;
+import me.piggypiglet.lavautilities.file.objects.json.GeneratorSetDeserializer;
+import me.piggypiglet.lavautilities.file.objects.json.time.TimeDeserializer;
+import me.piggypiglet.lavautilities.file.objects.json.time.TimeRangeDeserializer;
 import me.piggypiglet.lavautilities.file.objects.parts.Generator;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,10 +22,11 @@ import java.util.Set;
 )
 @Singleton
 public final class Config {
-    @JsonAdapter(GeneratorSetAdapter.class) private Set<Generator> generators;
-    private int generationCheckTicks;
+    @JsonAdapter(GeneratorSetDeserializer.class) private Set<Generator> generators;
+    @JsonAdapter(TimeDeserializer.class) private long generationCheckTicks;
+    @JsonAdapter(TimeRangeDeserializer.class) private long[] generationIntervalTicks;
     private List<String> sourcePermissions;
-    private int sourceWaitTicks;
+    @JsonAdapter(TimeDeserializer.class) private long sourceWaitTicks;
     private boolean repeatSourceChecks;
     private List<String> enabledWorlds;
 
@@ -32,8 +35,13 @@ public final class Config {
         return generators;
     }
 
-    public int getGenerationCheckTicks() {
+    public long getGenerationCheckTicks() {
         return generationCheckTicks;
+    }
+
+    @NotNull
+    public long[] getGenerationIntervalTicks() {
+        return generationIntervalTicks;
     }
 
     @NotNull
@@ -41,7 +49,7 @@ public final class Config {
         return sourcePermissions;
     }
 
-    public int getSourceWaitTicks() {
+    public long getSourceWaitTicks() {
         return sourceWaitTicks;
     }
 

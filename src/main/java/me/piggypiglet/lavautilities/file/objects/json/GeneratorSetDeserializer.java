@@ -1,6 +1,9 @@
 package me.piggypiglet.lavautilities.file.objects.json;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import me.piggypiglet.lavautilities.file.objects.parts.Generator;
 import org.jetbrains.annotations.NotNull;
@@ -16,17 +19,9 @@ import java.util.stream.Collectors;
 // Copyright (c) PiggyPiglet 2020
 // https://www.piggypiglet.me
 // ------------------------------
-public final class GeneratorSetAdapter implements JsonSerializer<Set<Generator>>, JsonDeserializer<Set<Generator>> {
+public final class GeneratorSetDeserializer implements JsonDeserializer<Set<Generator>> {
     private static final Type DESERIALZIED = new TypeToken<Map<String, Map<String, Object>>>(){}.getType();
     private static final Gson GSON = new Gson();
-
-    @NotNull
-    @Override
-    public JsonElement serialize(@NotNull final Set<Generator> src, @NotNull final Type typeOfSrc,
-                                 @NotNull final JsonSerializationContext context) {
-        return context.serialize(src.stream()
-                .collect(Collectors.toMap(Generator::getName, generator -> context.serialize(generator).getAsJsonObject().remove("name"))));
-    }
 
     @SuppressWarnings("unchecked")
     @NotNull
