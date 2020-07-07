@@ -20,11 +20,19 @@ public final class Task {
 
     @Inject private JavaPlugin main;
 
-    public void sync(@NotNull final Consumer<BukkitTask> function, final long ticks) {
-        SCHEDULER.runTaskLater(main, function, ticks);
+    public void syncDelayed(@NotNull final Consumer<BukkitTask> task, final long ticks) {
+        SCHEDULER.runTaskLater(main, task, ticks);
     }
 
-    public void async(@NotNull final Consumer<BukkitTask> function) {
-        SCHEDULER.runTaskAsynchronously(main, function);
+    public void async(@NotNull final Consumer<BukkitTask> task) {
+        SCHEDULER.runTaskAsynchronously(main, task);
+    }
+
+    public void asyncDelayed(@NotNull final Consumer<BukkitTask> task, final long delay) {
+        SCHEDULER.runTaskLaterAsynchronously(main, task, delay);
+    }
+
+    public void asyncTimer(@NotNull final Runnable task, final long interval) {
+        SCHEDULER.runTaskTimerAsynchronously(main, task, interval, interval);
     }
 }

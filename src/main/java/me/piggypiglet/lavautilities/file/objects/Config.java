@@ -23,10 +23,10 @@ import java.util.Set;
 @Singleton
 public final class Config {
     @JsonAdapter(GeneratorSetDeserializer.class) private Set<Generator> generators;
-    @JsonAdapter(TimeDeserializer.class) private long generationCheckTicks;
-    @JsonAdapter(TimeRangeDeserializer.class) private long[] generationIntervalTicks;
+    @JsonAdapter(TimeDeserializer.class) private long generationCheckTime;
+    @JsonAdapter(TimeRangeDeserializer.class) private long[] generationIntervalTime;
     private List<String> sourcePermissions;
-    @JsonAdapter(TimeDeserializer.class) private long sourceWaitTicks;
+    @JsonAdapter(TimeDeserializer.class) private long sourceWaitTime;
     private boolean repeatSourceChecks;
     private List<String> enabledWorlds;
 
@@ -36,12 +36,12 @@ public final class Config {
     }
 
     public long getGenerationCheckTicks() {
-        return generationCheckTicks;
+        return generationCheckTime;
     }
 
     @NotNull
     public long[] getGenerationIntervalTicks() {
-        return generationIntervalTicks;
+        return generationIntervalTime;
     }
 
     @NotNull
@@ -50,7 +50,7 @@ public final class Config {
     }
 
     public long getSourceWaitTicks() {
-        return sourceWaitTicks;
+        return sourceWaitTime;
     }
 
     public boolean isRepeatSourceChecks() {

@@ -6,9 +6,12 @@ import me.piggypiglet.lavautilities.file.objects.Config;
 import me.piggypiglet.lavautilities.generation.GeneratorManager;
 import me.piggypiglet.lavautilities.generation.objects.GeneratorLocation;
 import me.piggypiglet.lavautilities.schedule.Task;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2020
@@ -29,7 +32,13 @@ public final class GeneratorBlockFormer implements Runnable {
                 .forEach(generator -> {
                     formingGenerators.add(generator);
 
+                    task.syncDelayed(asyncTask -> {
+                        formingGenerators.remove(generator);
 
+                        final int[] opening = generator.getBlock();
+                        Bukkit.getWorld(generator.getWorld())
+                                .getBlockAt(opening[0], opening[1], opening[2]).setType(Material.STONE);
+                    }, ThreadLocalRandom.current().nextLong(config.getGenerationIntervalTicks()[0], config.getGenerationIntervalTicks()[1]));
                 });
     }
 }

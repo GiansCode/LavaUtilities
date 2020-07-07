@@ -44,7 +44,7 @@ public final class InfiniteLavaSourceListener implements Listener {
     }
 
     private void replaceLava(@NotNull final Block block) {
-        task.sync(task -> {
+        task.syncDelayed(task -> {
             if (config.isRepeatSourceChecks() && performChecks(block)) return;
 
             block.setType(Material.LAVA);
