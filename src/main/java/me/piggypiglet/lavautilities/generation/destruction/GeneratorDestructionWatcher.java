@@ -2,6 +2,7 @@ package me.piggypiglet.lavautilities.generation.destruction;
 
 import com.google.inject.Inject;
 import me.piggypiglet.lavautilities.generation.GeneratorManager;
+import me.piggypiglet.lavautilities.generation.formation.GeneratorBlockFormer;
 import me.piggypiglet.lavautilities.utils.BlockUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -15,6 +16,7 @@ import java.util.HashSet;
 // ------------------------------
 public final class GeneratorDestructionWatcher implements Runnable {
     @Inject private GeneratorManager generatorManager;
+    @Inject private GeneratorBlockFormer former;
 
     @Override
     public void run() {
@@ -22,8 +24,10 @@ public final class GeneratorDestructionWatcher implements Runnable {
             final World world = Bukkit.getWorld(generator.getWorld());
 
             if (BlockUtils.block(generator.getFirstSource(), world).getType() == Material.LAVA
-                    && BlockUtils.block(generator.getSecondSource(), world).getType() == Material.LAVA) return;
+                    && BlockUtils.block(generator.getSecondSource(), world).getType() == Material.LAVA
+                    && BlockUtils.block(generator.getBlock(), world).getType() == Material.AIR) return;
 
+            former.cancel(generator);
             generatorManager.unregister(generator);
         });
     }

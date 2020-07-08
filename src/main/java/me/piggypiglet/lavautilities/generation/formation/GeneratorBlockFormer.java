@@ -15,9 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 // ------------------------------
@@ -30,12 +28,18 @@ public final class GeneratorBlockFormer implements Listener {
     @Inject private Task task;
     @Inject private Config config;
 
+    private final Set<GeneratorLocation> forming = new HashSet<>();
+
     public void defaultForm(@NotNull final GeneratorLocation location) {
         form(location, config.getGenerationDefaultBlock());
     }
 
     public void form(@NotNull final Generator generator, @NotNull final GeneratorLocation location) {
         form(location, generator.getBlocks().get());
+    }
+
+    public void cancel(@NotNull final GeneratorLocation location) {
+        forming.remove(location);
     }
 
     @EventHandler
@@ -65,8 +69,14 @@ public final class GeneratorBlockFormer implements Listener {
     private void form(@NotNull final GeneratorLocation location, @NotNull final Material material) {
         final int[] block = location.getBlock();
         final long[] tickRange = config.getGenerationIntervalTicks();
+        forming.add(location);
 
-        task.syncDelayed(task -> Bukkit.getWorld(location.getWorld()).getBlockAt(block[0], block[1], block[2])
-                .setType(material), ThreadLocalRandom.current().nextLong(tickRange[0], tickRange[1]));
+        task.syncDelayed(task -> {
+            if (!forming.contains(location)) return;
+
+            forming.remove(location);
+            Bukkit.getWorld(location.getWorld()).getBlockAt(block[0], block[1], block[2])
+                    .setType(material);
+        }, ThreadLocalRandom.current().nextLong(tickRange[0], tickRange[1]));
     }
 }

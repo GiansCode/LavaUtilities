@@ -12,8 +12,6 @@ import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2020
@@ -53,22 +51,20 @@ public final class GeneratorCreationListener implements Listener {
     private void onCreation(@NotNull final Block block) {
         if (block.getType() != Material.LAVA) return;
 
-        final Optional<int[]> optionalOpening = RELATIVE_OPENINGS.stream()
-                .filter(relativeFilter(block, Material.AIR))
-                .findAny();
+        for (int i = 0; i < RELATIVE_SOURCES.size(); ++i) {
+            final int[] relativeOpening = RELATIVE_OPENINGS.get(i);
+            final int[] relativeSource = RELATIVE_SOURCES.get(i);
 
-        if (!optionalOpening.isPresent()) return;
+            if (notRelativeMatch(relativeOpening, block, Material.AIR)) continue;
+            if (notRelativeMatch(relativeSource, block, Material.LAVA)) continue;
 
-        final Optional<int[]> optionalSource = RELATIVE_SOURCES.stream()
-                .filter(relativeFilter(block, Material.LAVA))
-                .findAny();
-
-        if (!optionalSource.isPresent()) return;
-
-        registrar.attemptRegistration(optionalOpening.get(), optionalSource.get(), block);
+            registrar.attemptRegistration(relativeOpening, relativeSource, block);
+            break;
+        }
     }
 
-    private static Predicate<? super int[]> relativeFilter(@NotNull final Block block, @NotNull final Material material) {
-        return relative -> block.getRelative(relative[0], relative[1], relative[2]).getType() == material;
+    private static boolean notRelativeMatch(@NotNull final int[] relative, @NotNull final Block block,
+                                            @NotNull final Material material) {
+        return block.getRelative(relative[0], relative[1], relative[2]).getType() != material;
     }
 }
