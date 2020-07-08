@@ -4,9 +4,11 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.inject.Singleton;
 import me.piggypiglet.lavautilities.file.annotations.File;
 import me.piggypiglet.lavautilities.file.objects.json.GeneratorSetDeserializer;
+import me.piggypiglet.lavautilities.file.objects.json.MaterialDeserializer;
 import me.piggypiglet.lavautilities.file.objects.json.time.TimeDeserializer;
 import me.piggypiglet.lavautilities.file.objects.json.time.TimeRangeDeserializer;
 import me.piggypiglet.lavautilities.file.objects.parts.Generator;
+import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public final class Config {
     @JsonAdapter(GeneratorSetDeserializer.class) private Set<Generator> generators;
     @JsonAdapter(TimeDeserializer.class) private long generationCheckTime;
     @JsonAdapter(TimeRangeDeserializer.class) private long[] generationIntervalTime;
+    @JsonAdapter(MaterialDeserializer.class) private Material generationDefaultBlock;
     private List<String> sourcePermissions;
     @JsonAdapter(TimeDeserializer.class) private long sourceWaitTime;
     private boolean repeatSourceChecks;
@@ -42,6 +45,11 @@ public final class Config {
     @NotNull
     public long[] getGenerationIntervalTicks() {
         return generationIntervalTime;
+    }
+
+    @NotNull
+    public Material getGenerationDefaultBlock() {
+        return generationDefaultBlock;
     }
 
     @NotNull

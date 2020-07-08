@@ -8,7 +8,6 @@ import me.piggypiglet.lavautilities.commands.registerables.CommandsRegisterable;
 import me.piggypiglet.lavautilities.events.EventRegisterable;
 import me.piggypiglet.lavautilities.file.registerables.FileObjectsRegisterable;
 import me.piggypiglet.lavautilities.file.registerables.FilesRegisterable;
-import me.piggypiglet.lavautilities.generation.formation.registerables.FormationLoopRegisterable;
 import me.piggypiglet.lavautilities.guice.ExceptionalInjector;
 import me.piggypiglet.lavautilities.guice.modules.DynamicModule;
 import me.piggypiglet.lavautilities.guice.modules.InitialModule;
@@ -27,8 +26,7 @@ public final class LavaUtilitiesBootstrap extends JavaPlugin {
             FilesRegisterable.class,
             CommandHandlerRegisterable.class,
             CommandsRegisterable.class,
-            EventRegisterable.class,
-            FormationLoopRegisterable.class
+            EventRegisterable.class
     );
 
     @Override

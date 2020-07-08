@@ -3,14 +3,20 @@ package me.piggypiglet.lavautilities.generation.formation;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import me.piggypiglet.lavautilities.file.objects.Config;
+import me.piggypiglet.lavautilities.file.objects.parts.Generator;
 import me.piggypiglet.lavautilities.generation.GeneratorManager;
 import me.piggypiglet.lavautilities.generation.objects.GeneratorLocation;
 import me.piggypiglet.lavautilities.schedule.Task;
+import me.piggypiglet.lavautilities.utils.LocationUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 // ------------------------------
@@ -18,27 +24,47 @@ import java.util.concurrent.ThreadLocalRandom;
 // https://www.piggypiglet.me
 // ------------------------------
 @Singleton
-public final class GeneratorBlockFormer implements Runnable {
+public final class GeneratorBlockFormer implements Listener {
     @Inject private GeneratorManager generatorManager;
     @Inject private Task task;
     @Inject private Config config;
 
-    private final Set<GeneratorLocation> formingGenerators = new HashSet<>();
+    public void defaultForm(@NotNull final GeneratorLocation location) {
+        form(location, config.getGenerationDefaultBlock());
+    }
 
-    @Override
-    public void run() {
-        generatorManager.getGenerators().stream()
-                .filter(generator -> !formingGenerators.contains(generator))
-                .forEach(generator -> {
-                    formingGenerators.add(generator);
+    public void form(@NotNull final Generator generator, @NotNull final GeneratorLocation location) {
+        form(location, generator.getBlocks().get());
+    }
 
-                    task.syncDelayed(asyncTask -> {
-                        formingGenerators.remove(generator);
+    @EventHandler
+    public void onPurposefulGeneratedBlockDestruction(@NotNull final BlockBreakEvent event) {
+        final int[] block = LocationUtils.location(event.getBlock());
 
-                        final int[] opening = generator.getBlock();
-                        Bukkit.getWorld(generator.getWorld())
-                                .getBlockAt(opening[0], opening[1], opening[2]).setType(Material.STONE);
-                    }, ThreadLocalRandom.current().nextLong(config.getGenerationIntervalTicks()[0], config.getGenerationIntervalTicks()[1]));
-                });
+        final Optional<GeneratorLocation> optionalLocation = generatorManager.getGenerators().stream()
+                .filter(generator -> Arrays.equals(generator.getBlock(), block))
+                .findFirst();
+
+        if (!optionalLocation.isPresent()) return;
+
+        task.async(task -> {
+            final Optional<Generator> optionalGenerator = config.getGenerators().stream()
+                    .filter(generator -> event.getPlayer().hasPermission("lavautilities.generator." + generator.getName()))
+                    .findFirst();
+
+            if (optionalGenerator.isPresent()) {
+                form(optionalGenerator.get(), optionalLocation.get());
+            } else {
+                defaultForm(optionalLocation.get());
+            }
+        });
+    }
+
+    private void form(@NotNull final GeneratorLocation location, @NotNull final Material material) {
+        final int[] block = location.getBlock();
+        final long[] tickRange = config.getGenerationIntervalTicks();
+
+        task.syncDelayed(task -> Bukkit.getWorld(location.getWorld()).getBlockAt(block[0], block[1], block[2])
+                .setType(material), ThreadLocalRandom.current().nextLong(tickRange[0], tickRange[1]));
     }
 }

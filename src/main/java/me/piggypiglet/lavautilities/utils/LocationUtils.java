@@ -1,6 +1,6 @@
 package me.piggypiglet.lavautilities.utils;
 
-import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 // ------------------------------
@@ -12,7 +12,7 @@ public final class LocationUtils {
         throw new AssertionError("This class cannot be initialized.");
     }
 
-    public static int[] fromBukkit(@NotNull final Location location) {
-        return new int[]{location.getBlockX(), location.getBlockY(), location.getBlockZ()};
+    public static int[] location(@NotNull final Block block) {
+        return new int[]{block.getX(), block.getY(), block.getZ()};
     }
 }

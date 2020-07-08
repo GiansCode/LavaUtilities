@@ -8,6 +8,7 @@ generators:
     blocks:
       - 'NETHERRACK;50'
       - 'DIRT;50'
+generation_default_block: NETHERRACK
 generation_check_time: 2 secs
 generation_interval_time: 2 secs - 3 secs
 source_permissions:

@@ -33,6 +33,6 @@ public final class GeneratorSetDeserializer implements JsonDeserializer<Set<Gene
                 .map(Map.Entry::getValue)
                 .map(GSON::toJsonTree)
                 .map(generator -> (Generator) context.deserialize(generator, Generator.class))
-                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingInt(Generator::getPriority))));
+                .collect(Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingInt(Generator::getPriority)).descendingSet()));
     }
 }

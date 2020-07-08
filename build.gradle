@@ -37,6 +37,7 @@ processResources {
 }
 
 shadowJar {
+    delete file("server/plugins/LavaUtilities")
     destinationDirectory = file("server/plugins/")
     //todo: relocate
 }
