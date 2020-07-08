@@ -19,6 +19,10 @@ public final class GeneratorManager {
         generators.add(location);
     }
 
+    public synchronized void unregister(@NotNull final GeneratorLocation location) {
+        generators.remove(location);
+    }
+
     @NotNull
     public Set<GeneratorLocation> getGenerators() {
         return generators;

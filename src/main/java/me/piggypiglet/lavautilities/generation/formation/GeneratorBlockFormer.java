@@ -7,7 +7,7 @@ import me.piggypiglet.lavautilities.file.objects.parts.Generator;
 import me.piggypiglet.lavautilities.generation.GeneratorManager;
 import me.piggypiglet.lavautilities.generation.objects.GeneratorLocation;
 import me.piggypiglet.lavautilities.schedule.Task;
-import me.piggypiglet.lavautilities.utils.LocationUtils;
+import me.piggypiglet.lavautilities.utils.BlockUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 // ------------------------------
@@ -39,10 +40,11 @@ public final class GeneratorBlockFormer implements Listener {
 
     @EventHandler
     public void onPurposefulGeneratedBlockDestruction(@NotNull final BlockBreakEvent event) {
-        final int[] block = LocationUtils.location(event.getBlock());
+        final int[] block = BlockUtils.location(event.getBlock());
+        final UUID world = event.getBlock().getWorld().getUID();
 
         final Optional<GeneratorLocation> optionalLocation = generatorManager.getGenerators().stream()
-                .filter(generator -> Arrays.equals(generator.getBlock(), block))
+                .filter(generator -> Arrays.equals(generator.getBlock(), block) && generator.getWorld().equals(world))
                 .findFirst();
 
         if (!optionalLocation.isPresent()) return;
