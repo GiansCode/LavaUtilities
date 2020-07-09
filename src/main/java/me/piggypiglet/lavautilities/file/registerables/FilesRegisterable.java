@@ -20,7 +20,7 @@ public final class FilesRegisterable extends Registerable {
     protected void execute() {
         for (final Class<?> clazz : fileClasses) {
             final File data = clazz.getAnnotation(File.class);
-            fileManager.loadConfig(clazz, data.internalPath(), data.externalPath());
+            fileManager.loadFile(clazz, data.internalPath(), data.externalPath());
         }
     }
 }

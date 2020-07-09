@@ -10,6 +10,7 @@ import me.piggypiglet.lavautilities.schedule.Task;
 import me.piggypiglet.lavautilities.utils.BlockUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -75,8 +76,12 @@ public final class GeneratorBlockFormer implements Listener {
             if (!forming.contains(location)) return;
 
             forming.remove(location);
-            Bukkit.getWorld(location.getWorld()).getBlockAt(block[0], block[1], block[2])
-                    .setType(material);
+
+            final Block opening = Bukkit.getWorld(location.getWorld()).getBlockAt(block[0], block[1], block[2]);
+
+            if (opening.getType() == Material.AIR) {
+                opening.setType(material);
+            }
         }, ThreadLocalRandom.current().nextLong(tickRange[0], tickRange[1]));
     }
 }

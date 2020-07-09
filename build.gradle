@@ -39,5 +39,9 @@ processResources {
 shadowJar {
     delete file("server/plugins/LavaUtilities")
     destinationDirectory = file("server/plugins/")
-    //todo: relocate
+
+    relocate "com.google.inject", "me.piggypiglet.lavautilities.deps.inject.guice"
+    relocate "javax.inject", "me.piggypiglet.lavautilities.deps.inject.javax"
+    relocate "org.aopalliance", "me.piggypiglet.lavautilities.deps.inject.aop"
+    relocate "sh.okx.timeapi", "me.piggypiglet.lavautilities.deps.timeapi"
 }

@@ -1,8 +1,6 @@
 package me.piggypiglet.lavautilities.utils.file;
 
 import me.piggypiglet.lavautilities.boot.LavaUtilitiesBootstrap;
-import me.piggypiglet.lavautilities.utils.file.exceptions.DirectoryCreationException;
-import me.piggypiglet.lavautilities.utils.file.exceptions.FileCreationException;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -11,6 +9,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
 // ------------------------------
 // Copyright (c) PiggyPiglet 2020
@@ -18,18 +19,21 @@ import java.nio.file.StandardCopyOption;
 // ------------------------------
 public final class FileUtils {
     private static final Class<LavaUtilitiesBootstrap> MAIN = LavaUtilitiesBootstrap.class;
+    private static final Pattern LINE_DELIMITER = Pattern.compile("\n");
 
     private FileUtils() {
         throw new AssertionError("This class cannot be initialized.");
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @NotNull
     public static File createFile(@NotNull final String internalPath, @NotNull final String externalPath) throws IOException {
         final File file = new File(externalPath);
 
         if (file.exists()) return file;
-        if (!file.getParentFile().mkdirs()) throw new DirectoryCreationException(file.getParentFile());
-        if (!file.createNewFile()) throw new FileCreationException(file);
+
+        file.getParentFile().mkdirs();
+        file.createNewFile();
 
         exportResource(internalPath, externalPath);
         return file;
@@ -44,5 +48,10 @@ public final class FileUtils {
     @NotNull
     public static String readFile(@NotNull final File file) throws IOException {
         return String.join("\n", com.google.common.io.Files.readLines(file, StandardCharsets.UTF_8));
+    }
+
+    public static void writeFile(@NotNull final String path, @NotNull final String content) throws IOException {
+        Files.write(Paths.get(path), Arrays.asList(LINE_DELIMITER.split(content)), StandardCharsets.UTF_8,
+                StandardOpenOption.TRUNCATE_EXISTING);
     }
 }

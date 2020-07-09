@@ -1,3 +1,18 @@
+# generators:
+# - Higher priority = will be preferred
+# - MATERIAL;CHANCE (case insensitive). Uses 0.6 https://github.com/lewysDavies/Java-Probability-Collection
+# - Permission: lavautilities.generator.name, e.g. lavautilities.generator.default
+#
+# generation_default_block: Block that will initially be placed when a generator is created.
+# generation_interval_time: How long should we wait till a destroyed block is replaced.
+# generation_destruction_check_time: How often should we check if each generator is still in tact. Don't worry, it
+#                                    ignores unloaded chunks, and is all done async.
+# generation_data_save_time: How often to save data from memory to file. This is also done at plugin shutdown
+# source_permissions: What permissions does the player require to use an infinite lava source?
+# source_wait_time: How long to wait before replenishing the taken source
+# repeat_source_checks: Should we check the rest of the lava source is still in tact before replenishing the taken source(s)?
+#                       You should probably leave this to true.
+# enabled_worlds: Which worlds can people use infinite lava sources & lava generators in?
 generators:
   'default':
     priority: 1
@@ -9,8 +24,9 @@ generators:
       - 'NETHERRACK;50'
       - 'DIRT;50'
 generation_default_block: NETHERRACK
-generation_check_time: 2 secs
 generation_interval_time: 2 secs - 3 secs
+generation_destruction_check_time: 1 sec
+generation_data_save_time: 10 mins
 source_permissions:
   - 'infinitelavasource.use'
 source_wait_time: 2 secs

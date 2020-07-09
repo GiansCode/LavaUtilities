@@ -8,6 +8,8 @@ import me.piggypiglet.lavautilities.commands.registerables.CommandsRegisterable;
 import me.piggypiglet.lavautilities.events.EventRegisterable;
 import me.piggypiglet.lavautilities.file.registerables.FileObjectsRegisterable;
 import me.piggypiglet.lavautilities.file.registerables.FilesRegisterable;
+import me.piggypiglet.lavautilities.generation.data.DataSaver;
+import me.piggypiglet.lavautilities.generation.data.registerables.DataSaveRegisterable;
 import me.piggypiglet.lavautilities.generation.destruction.registerables.DestructionLoopRegisterable;
 import me.piggypiglet.lavautilities.guice.ExceptionalInjector;
 import me.piggypiglet.lavautilities.guice.modules.DynamicModule;
@@ -22,22 +24,29 @@ import java.util.concurrent.atomic.AtomicReference;
 // https://www.piggypiglet.me
 // ------------------------------
 public final class LavaUtilitiesBootstrap extends JavaPlugin {
-    private static final List<Class<? extends Registerable>> REGISTERABLES = Lists.newArrayList(
+    private static final List<Class<? extends Registerable>> STARTUP = Lists.newArrayList(
             FileObjectsRegisterable.class,
             FilesRegisterable.class,
             CommandHandlerRegisterable.class,
             CommandsRegisterable.class,
             EventRegisterable.class,
-            DestructionLoopRegisterable.class
+            DestructionLoopRegisterable.class,
+            DataSaveRegisterable.class
     );
+
+    private static final List<Class<? extends Runnable>> SHUTDOWN = Lists.newArrayList(
+            DataSaver.class
+    );
+
+    private final AtomicReference<Injector> injectorReference = new AtomicReference<>();
 
     @Override
     public void onEnable() {
-        final AtomicReference<Injector> injectorReference = new AtomicReference<>(
+        injectorReference.set(
                 new ExceptionalInjector(new InitialModule(this).createInjector())
         );
 
-        for (final Class<? extends Registerable> registerableClass : REGISTERABLES) {
+        for (final Class<? extends Registerable> registerableClass : STARTUP) {
             final Injector injector = injectorReference.get();
             final Registerable registerable = injector.getInstance(registerableClass);
             registerable.run(injector);
@@ -49,5 +58,12 @@ public final class LavaUtilitiesBootstrap extends JavaPlugin {
                 )));
             }
         }
+    }
+
+    @Override
+    public void onDisable() {
+        SHUTDOWN.stream()
+                .map(injectorReference.get()::getInstance)
+                .forEach(Runnable::run);
     }
 }

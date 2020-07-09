@@ -25,9 +25,10 @@ import java.util.Set;
 @Singleton
 public final class Config {
     @JsonAdapter(GeneratorSetDeserializer.class) private Set<Generator> generators;
-    @JsonAdapter(TimeDeserializer.class) private long generationCheckTime;
-    @JsonAdapter(TimeRangeDeserializer.class) private long[] generationIntervalTime;
     @JsonAdapter(MaterialDeserializer.class) private Material generationDefaultBlock;
+    @JsonAdapter(TimeRangeDeserializer.class) private long[] generationIntervalTime;
+    @JsonAdapter(TimeDeserializer.class) private long generationDestructionCheckTime;
+    @JsonAdapter(TimeDeserializer.class) private long generationDataSaveTime;
     private List<String> sourcePermissions;
     @JsonAdapter(TimeDeserializer.class) private long sourceWaitTime;
     private boolean repeatSourceChecks;
@@ -38,8 +39,9 @@ public final class Config {
         return generators;
     }
 
-    public long getGenerationCheckTicks() {
-        return generationCheckTime;
+    @NotNull
+    public Material getGenerationDefaultBlock() {
+        return generationDefaultBlock;
     }
 
     @NotNull
@@ -47,9 +49,12 @@ public final class Config {
         return generationIntervalTime;
     }
 
-    @NotNull
-    public Material getGenerationDefaultBlock() {
-        return generationDefaultBlock;
+    public long getGenerationDestructionCheckTicks() {
+        return generationDestructionCheckTime;
+    }
+
+    public long getGenerationDataSaveTicks() {
+        return generationDataSaveTime;
     }
 
     @NotNull

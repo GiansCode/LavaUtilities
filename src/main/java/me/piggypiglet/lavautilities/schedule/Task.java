@@ -28,6 +28,10 @@ public final class Task {
         SCHEDULER.runTaskAsynchronously(main, task);
     }
 
+    public void async(@NotNull final Runnable task) {
+        SCHEDULER.runTaskAsynchronously(main, task);
+    }
+
     public void asyncDelayed(@NotNull final Consumer<BukkitTask> task, final long delay) {
         SCHEDULER.runTaskLaterAsynchronously(main, task, delay);
     }

@@ -2,6 +2,7 @@ package me.piggypiglet.lavautilities.generation.creation;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import me.piggypiglet.lavautilities.file.objects.Config;
 import me.piggypiglet.lavautilities.schedule.Task;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,8 +33,9 @@ public final class GeneratorCreationListener implements Listener {
             new int[]{0, 0, -2}
     );
 
-    @Inject private GeneratorRegistrar registrar;
     @Inject private Task task;
+    @Inject private GeneratorRegistrar registrar;
+    @Inject private Config config;
 
     @EventHandler
     public void onLavaGeneratorCreation(@NotNull final BlockFromToEvent event) {
@@ -49,6 +51,8 @@ public final class GeneratorCreationListener implements Listener {
     }
 
     private void onCreation(@NotNull final Block block) {
+        if (!config.getEnabledWorlds().contains(block.getWorld().getName())) return;
+
         if (block.getType() != Material.LAVA) return;
 
         for (int i = 0; i < RELATIVE_SOURCES.size(); ++i) {
